@@ -47,3 +47,23 @@ export async function addBots(gameID, count = 1, strategy = 'smart', namePrefix 
   });
   return resp.data;
 }
+
+/**
+ * Obtiene la lista de partidas disponibles.
+ * 
+ * @returns {Promise<Array<{ id: string, maxPlayers: number, currentPlayers: number, state: string }>>}
+ */
+export async function startGame(gameId) {
+  const response = await fetch(`http://localhost:5000/games/${gameId}/start`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ hostPlayerID: 0 })  // por ahora el host siempre es el ID 0
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Unknown error');
+  }
+
+  return await response.json();
+}
